@@ -14,11 +14,11 @@ CGI::Application::Plugin::Forward - Pass control from one run mode to another
 
 =head1 VERSION
 
-Version 0.01
+Version 1.00
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '1.00';
 
 =head1 SYNOPSIS
 
@@ -99,6 +99,25 @@ C<current_run_mode> will not be updated:
 
         my $rm = $self->get_current_runmode;  # 'start'
     }
+
+
+Forward will work with coderef-based runmodes as well:
+
+    sub setup {
+        my $self = shift;
+        $self->run_modes({
+            start         => 'start',
+            anon_action   => sub {
+                my $self = shift;
+                my $rm = $self->get_current_runmode;  # 'anon_action'
+            },
+        });
+    }
+    sub start {
+        my $self = shift;
+        return $self->forward('anon_action');
+    }
+
 
 =head1 METHODS
 

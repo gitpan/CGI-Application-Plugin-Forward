@@ -35,6 +35,7 @@ $ENV{CGI_APP_RETURN_ONLY} = 1;
 
 }
 
+Example1->new->run;
 
 {
     package Example2;
@@ -64,6 +65,7 @@ $ENV{CGI_APP_RETURN_ONLY} = 1;
         is($rm,'other_action','rm=other_action');
     }
 }
+Example2->new->run;
 
 
 {
@@ -97,9 +99,38 @@ $ENV{CGI_APP_RETURN_ONLY} = 1;
 
 }
 
-Example1->new->run;
-Example2->new->run;
 Example3->new->run;
 
 
+{
+    package Example4;
+    use vars qw(@ISA);
+
+    use Test::More;
+    use CGI::Application;
+    use CGI::Application::Plugin::Forward;
+
+    @ISA = ('CGI::Application');
+
+    sub setup {
+        my $self = shift;
+        $self->run_modes({
+            start         => 'start',
+            anon_action  => sub {
+                my $self = shift;
+                my $rm = $self->get_current_runmode;  # 'anon_action'
+                is($rm,'anon_action','rm=anon_action');
+            },
+        });
+    }
+    sub start {
+        my $self = shift;
+        return $self->forward('anon_action');
+    }
+
+
+
+}
+
+Example4->new->run;
 

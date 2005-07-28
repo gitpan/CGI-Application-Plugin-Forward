@@ -1,5 +1,9 @@
 Revision history for CGI-Application-Plugin-Forward
 
+1.00    July 28, 2005
+        - document and test support for coderef runmodes (Mark Stosberg)
+        - API declared stable
+
 0.01    July 27, 2005
         - First version
 
