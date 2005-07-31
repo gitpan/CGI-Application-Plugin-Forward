@@ -14,11 +14,11 @@ CGI::Application::Plugin::Forward - Pass control from one run mode to another
 
 =head1 VERSION
 
-Version 1.00
+Version 1.01
 
 =cut
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 =head1 SYNOPSIS
 

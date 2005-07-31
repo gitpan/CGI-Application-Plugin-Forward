@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: CGI-Application-Plugin-Forward
-version: 1.00
+version: 1.01
 author:
   - Michael Graham <mag-perl@occamstoothbrush.com>
 abstract: Pass control from one run mode to another
@@ -10,5 +10,5 @@ requires:
 provides:
   CGI::Application::Plugin::Forward:
     file: lib/CGI/Application/Plugin/Forward.pm
-    version: 1.00
+    version: 1.01
 generated_by: Module::Build version 0.2607

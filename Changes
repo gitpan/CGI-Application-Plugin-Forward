@@ -1,5 +1,8 @@
 Revision history for CGI-Application-Plugin-Forward
 
+1.01    July 30, 2005
+        - added Makefile.PL compatibility to the distribution
+
 1.00    July 28, 2005
         - document and test support for coderef runmodes (Mark Stosberg)
         - API declared stable
