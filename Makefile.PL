@@ -7,7 +7,8 @@ WriteMakefile
           'NAME' => 'CGI::Application::Plugin::Forward',
           'VERSION_FROM' => 'lib/CGI/Application/Plugin/Forward.pm',
           'PREREQ_PM' => {
-                           'Test::More' => 0
+                           'Test::More' => 0,
+                           'CGI::Application' => 0
                          }
         )
 ;

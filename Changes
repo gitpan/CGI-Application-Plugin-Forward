@@ -1,5 +1,11 @@
 Revision history for CGI-Application-Plugin-Forward
 
+1.03    August 23, 2005
+        - added the 'forward_prerun' hook
+
+1.02    August 1, 2005
+        - added CGI::Application to the prerequisites
+
 1.01    July 30, 2005
         - added Makefile.PL compatibility to the distribution
 

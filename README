@@ -3,7 +3,7 @@ NAME
     another
 
 VERSION
-    Version 1.01
+    Version 1.03
 
 SYNOPSIS
         use base 'CGI::Application';
@@ -106,6 +106,62 @@ METHODS
     output of the new run mode.
 
         return $self->forward('run_mode_name', @run_mode_params);
+
+HOOKS
+    Before the forwarded run mode is called, the "forward_prerun" hook is
+    called. You can use this hook to do any prep work that you want to do
+    before any new run mode gains control.
+
+    This is similar to CGI::Application's built in "cgiapp_prerun" method,
+    but it is called each time you call forward; not just the when your
+    application starts.
+
+        sub setup {
+            my $self = shift;
+            $self->add_callback('forward_prerun' => \&prepare_rm_stuff);
+        }
+
+        sub prepare_rm_stuff {
+            my $self = shift;
+            # do any necessary prep work here....
+        }
+
+    Note that your hooked method will only be called when you call forward.
+    If you never call "forward", the hook will not be called. In particuar,
+    the hook will not be called for your application's "start_mode". For
+    that, you still use "cgiapp_prerun".
+
+    If you want to have a method run for every run mode *including* the
+    "start_mode", then you can call the hook directly from "cgiapp_prerun".
+
+        sub setup {
+            my $self = shift;
+            $self->add_callback('forward_prerun' => \&prepare_rm_stuff);
+        }
+        sub cgiapp_prerun {
+            my $self = shift;
+            $self->prepare_rm_stuff;
+        }
+
+        sub prepare_rm_stuff {
+            my $self = shift;
+            # do any necessary prep work here....
+        }
+
+    Alternately, you can hook "cgiapp_prerun" to the "forward_prerun" hook:
+
+        sub setup {
+            my $self = shift;
+            $self->add_callback('forward_prerun' => \&cgiapp_prerun);
+        }
+        sub cgiapp_prerun {
+            my $self = shift;
+            # do any necessary prep work here....
+        }
+
+    This is a less flexible solution, since certain things that can be done
+    in "cgiapp_prerun" (like setting "prerun_mode") won't work when the
+    method is called from the "forward_prerun" hook.
 
 AUTHOR
     Michael Graham, "<mag-perl@occamstoothbrush.com>"

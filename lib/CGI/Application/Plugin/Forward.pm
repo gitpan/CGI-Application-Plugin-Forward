@@ -14,11 +14,11 @@ CGI::Application::Plugin::Forward - Pass control from one run mode to another
 
 =head1 VERSION
 
-Version 1.01
+Version 1.03
 
 =cut
 
-our $VERSION = '1.01';
+our $VERSION = '1.03';
 
 =head1 SYNOPSIS
 
@@ -143,6 +143,64 @@ sub forward {
     return $self->$method(@_);
 }
 
+
+=head1 HOOKS
+
+Before the forwarded run mode is called, the C<forward_prerun> hook is called.
+You can use this hook to do any prep work that you want to do before any
+new run mode gains control.
+
+This is similar to L<CGI::Application>'s built in C<cgiapp_prerun>
+method, but it is called each time you call L<forward>; not just the
+when your application starts.
+
+    sub setup {
+        my $self = shift;
+        $self->add_callback('forward_prerun' => \&prepare_rm_stuff);
+    }
+
+    sub prepare_rm_stuff {
+        my $self = shift;
+        # do any necessary prep work here....
+    }
+
+Note that your hooked method will only be called when you call
+L<forward>.  If you never call C<forward>, the hook will not be called.
+In particuar, the hook will not be called for your application's
+C<start_mode>.  For that, you still use C<cgiapp_prerun>.
+
+If you want to have a method run for every run mode I<including> the C<start_mode>,
+then you can call the hook directly from C<cgiapp_prerun>.
+
+    sub setup {
+        my $self = shift;
+        $self->add_callback('forward_prerun' => \&prepare_rm_stuff);
+    }
+    sub cgiapp_prerun {
+        my $self = shift;
+        $self->prepare_rm_stuff;
+    }
+
+    sub prepare_rm_stuff {
+        my $self = shift;
+        # do any necessary prep work here....
+    }
+
+Alternately, you can hook C<cgiapp_prerun> to the C<forward_prerun>
+hook:
+
+    sub setup {
+        my $self = shift;
+        $self->add_callback('forward_prerun' => \&cgiapp_prerun);
+    }
+    sub cgiapp_prerun {
+        my $self = shift;
+        # do any necessary prep work here....
+    }
+
+This is a less flexible solution, since certain things that can be done
+in C<cgiapp_prerun> (like setting C<prerun_mode>) won't work when the
+method is called from the C<forward_prerun> hook.
 
 =head1 AUTHOR
 
