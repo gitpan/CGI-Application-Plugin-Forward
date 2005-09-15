@@ -14,11 +14,15 @@ CGI::Application::Plugin::Forward - Pass control from one run mode to another
 
 =head1 VERSION
 
-Version 1.03
+Version 1.04
 
 =cut
 
-our $VERSION = '1.03';
+our $VERSION = '1.04';
+
+if (CGI::Application->can('new_hook')) {
+    CGI::Application->new_hook('forward_prerun');
+}
 
 =head1 SYNOPSIS
 
@@ -134,13 +138,28 @@ sub forward {
     my $self     = shift;
     my $run_mode = shift;
 
+    if ($CGI::Application::Plugin::AutoRunmode::VERSION) {
+        if (CGI::Application::Plugin::AutoRunmode->can('is_auto_runmode')) {
+            if (CGI::Application::Plugin::AutoRunmode::is_auto_runmode($self, $run_mode)) {
+                $self->run_modes( $run_mode => $run_mode);
+            }
+        }
+    }
+
     my %rm_map = $self->run_modes;
     if (not exists $rm_map{$run_mode}) {
-        croak "run mode $run_mode does not exist";
+        croak "CAP::Forward: run mode $run_mode does not exist";
     }
     my $method = $rm_map{$run_mode};
-    $self->{__CURRENT_RUNMODE} = $run_mode;
-    return $self->$method(@_);
+
+    if ($self->can($method) or ref $method eq 'CODE') {
+        $self->{__CURRENT_RUNMODE} = $run_mode;
+        $self->call_hook('forward_prerun');
+        return $self->$method(@_);
+    }
+    else {
+        croak "CAP::Forward: target method $method of run mode $run_mode does not exist";
+    }
 }
 
 

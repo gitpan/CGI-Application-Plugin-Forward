@@ -10,7 +10,10 @@ my $builder = Module::Build->new(
     requires => {
         'CGI::Application' => 0,
         'Test::More'       => 0,
-    },                          
+    },
+    recommends => {
+        'CGI::Application::Plugin::AutoRunmode' => 0.09,
+    },
     add_to_cleanup      => [ 'CGI-Application-Plugin-Forward-*' ],
     create_makefile_pl  => 'traditional',
 );
