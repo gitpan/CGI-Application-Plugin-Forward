@@ -3,7 +3,7 @@ NAME
     another
 
 VERSION
-    Version 1.04
+    Version 1.05
 
 SYNOPSIS
         use base 'CGI::Application';
@@ -99,6 +99,32 @@ DESCRIPTION
             my $self = shift;
             return $self->forward('anon_action');
         }
+
+FORWARD vs. REDIRECT
+    Calling "forward" changes the run mode of your application, but it stays
+    within the same HTTP request.
+
+    To redirect to a new runmode using a completely new web request, you
+    might consider using the "redirect" method provided by
+    CGI::Application::Plugin::Redirect.
+
+    The advantage of using an external redirect as opposed to an internal
+    forward is that it provides a 'clean break' between pages.
+
+    For instance, in a typical BREAD application (Browse, Read, Edit, Add,
+    Delete), after the user completes an action, you usually return the user
+    to the Browse list. For instance, when the user adds a new record via a
+    POST form, and your app returns them to the list of records.
+
+    If you use "forward", then you are still in the same request as the
+    original *add record*. The user might hit *reload*, expecting to refresh
+    the list of records. But in fact, *reload* will attempt to repost the
+    *add record* form. The user's browser might present a warning about
+    reposting the same data. The browser may refuse to redisplay the page,
+    due for caching reasons.
+
+    So in this case, it may make more sense to do a fresh HTTP redirect back
+    to the Browse list.
 
 METHODS
   forward

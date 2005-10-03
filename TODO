@@ -1,0 +1,2 @@
+  - Should continue to work with older versions of CGI::Application that
+    don't support callbacks

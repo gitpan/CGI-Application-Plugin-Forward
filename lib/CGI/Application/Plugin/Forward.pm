@@ -1,5 +1,6 @@
 package CGI::Application::Plugin::Forward;
 
+
 use warnings;
 use strict;
 use Carp;
@@ -14,12 +15,13 @@ CGI::Application::Plugin::Forward - Pass control from one run mode to another
 
 =head1 VERSION
 
-Version 1.04
+Version 1.05
 
 =cut
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
+use CGI::Application;
 if (CGI::Application->can('new_hook')) {
     CGI::Application->new_hook('forward_prerun');
 }
@@ -122,6 +124,32 @@ Forward will work with coderef-based runmodes as well:
         return $self->forward('anon_action');
     }
 
+=head1 FORWARD vs. REDIRECT
+
+Calling C<forward> changes the run mode of your application, but it
+stays within the same HTTP request.
+
+To redirect to a new runmode using a completely new web request, you
+might consider using the C<redirect> method provided by
+L<CGI::Application::Plugin::Redirect>.
+
+The advantage of using an external redirect as opposed to an internal
+forward is that it provides a 'clean break' between pages.
+
+For instance, in a typical BREAD application (Browse, Read, Edit, Add,
+Delete), after the user completes an action, you usually return the user
+to the Browse list.  For instance, when the user adds a new record
+via a POST form, and your app returns them to the list of records.
+
+If you use C<forward>, then you are still in the same request as the
+original I<add record>.  The user might hit I<reload>, expecting to
+refresh the list of records.  But in fact, I<reload> will attempt to
+repost the I<add record> form.  The user's browser might present a
+warning about reposting the same data.  The browser may refuse to
+redisplay the page, due for caching reasons.
+
+So in this case, it may make more sense to do a fresh HTTP redirect back
+to the Browse list.
 
 =head1 METHODS
 
@@ -154,7 +182,9 @@ sub forward {
 
     if ($self->can($method) or ref $method eq 'CODE') {
         $self->{__CURRENT_RUNMODE} = $run_mode;
-        $self->call_hook('forward_prerun');
+        if ($self->can('call_hook')) {
+            $self->call_hook('forward_prerun');
+        }
         return $self->$method(@_);
     }
     else {
@@ -165,9 +195,9 @@ sub forward {
 
 =head1 HOOKS
 
-Before the forwarded run mode is called, the C<forward_prerun> hook is called.
-You can use this hook to do any prep work that you want to do before any
-new run mode gains control.
+Before the forwarded run mode is called, the C<forward_prerun> hook is
+called. You can use this hook to do any prep work that you want to do
+before any new run mode gains control.
 
 This is similar to L<CGI::Application>'s built in C<cgiapp_prerun>
 method, but it is called each time you call L<forward>; not just the
@@ -188,8 +218,9 @@ L<forward>.  If you never call C<forward>, the hook will not be called.
 In particuar, the hook will not be called for your application's
 C<start_mode>.  For that, you still use C<cgiapp_prerun>.
 
-If you want to have a method run for every run mode I<including> the C<start_mode>,
-then you can call the hook directly from C<cgiapp_prerun>.
+If you want to have a method run for every run mode I<including> the
+C<start_mode>, then you can call the hook directly from
+C<cgiapp_prerun>.
 
     sub setup {
         my $self = shift;

@@ -1,5 +1,16 @@
 Revision history for CGI-Application-Plugin-Forward
 
+1.05    October 03, 2005
+        - fixed to work with old versions of CGI::Application that don't
+          support callbacks
+
+        - now explicitly 'use CGI::Application' to make the registration
+          of hooks it possible to register hooks at class load time.
+
+        - added docs describing the difference between this module and
+          CGI::Application::Plugin::Redirect, and also providng some
+          notes on when to use each method.
+
 1.04    September 15, 2005
         - actually, NOW I added the 'forward_prerun' hook
         - added support for AutoRunmode

@@ -9,8 +9,11 @@ BEGIN {
     eval {
         require CGI::Application::Plugin::AutoRunmode;
     };
-    if ($@ or !CGI::Application->can('new_hook')) {
+    if ($@) {
         plan skip_all => 'CGI::Application::Plugin::AutoRunmode not installed';
+    }
+    if (!CGI::Application->can('new_hook')) {
+        plan skip_all => 'installed CGI::Application does not support callbacks';
     }
     else {
         if (CGI::Application::Plugin::AutoRunmode->can('is_auto_runmode')) {
