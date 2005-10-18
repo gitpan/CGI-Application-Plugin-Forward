@@ -1,5 +1,10 @@
 Revision history for CGI-Application-Plugin-Forward
 
+1.06    October 18, 2005
+        - fixed test failure due to incompatibility with new
+          CAP::AutoRunmode (discovered by Shawn Sorichetti)
+        - removed TODO, since everything on the list has been done
+
 1.05    October 03, 2005
         - fixed to work with old versions of CGI::Application that don't
           support callbacks

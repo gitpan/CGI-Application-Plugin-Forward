@@ -32,12 +32,13 @@ BEGIN {
 
     use Test::More;
     use CGI::Application;
+    BEGIN { @ISA = ('CGI::Application'); }
+
     use CGI::Application::Plugin::Forward;
     BEGIN {
         CGI::Application::Plugin::AutoRunmode->import('cgiapp_prerun');
     }
 
-    @ISA = ('CGI::Application');
 
     sub setup {
         my $self = shift;

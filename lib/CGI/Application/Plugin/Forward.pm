@@ -15,11 +15,11 @@ CGI::Application::Plugin::Forward - Pass control from one run mode to another
 
 =head1 VERSION
 
-Version 1.05
+Version 1.06
 
 =cut
 
-our $VERSION = '1.05';
+our $VERSION = '1.06';
 
 use CGI::Application;
 if (CGI::Application->can('new_hook')) {

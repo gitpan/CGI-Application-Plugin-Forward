@@ -19,4 +19,3 @@ t/04-forward_prerun_hook.t
 t/05-auto_runmode.t
 t/pod-coverage.t
 t/pod.t
-TODO

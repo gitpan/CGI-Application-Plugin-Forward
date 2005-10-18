@@ -26,7 +26,9 @@ Finally, add this directory to the @Scenarios array below.
 =cut
 
 my @Scenarios = qw(
-    t/prereq_scenarios/old_autorunmode
+    t/prereq_scenarios/old_autorunmode-0.08
+    t/prereq_scenarios/old_autorunmode-0.09
+    t/prereq_scenarios/old_autorunmode-0.10
     t/prereq_scenarios/old_cgiapp
     t/prereq_scenarios/normal
 );
